@@ -1,0 +1,63 @@
+https://leetcode.com/problems/super-palindromes/
+
+class Solution {
+public:
+    int ans = 0;
+    bool isPoly(long long nb) {
+        long long rev = 0;
+        while (rev <= nb) {
+            if (rev == nb)
+                return true;
+            rev = rev * 10 + nb % 10;
+            if (rev == nb)
+                return true;
+            nb /= 10;
+        }
+        return false;
+    }
+    
+    void evenDigPals(long long start, long long end) {
+        for (int i = 1; i < 10000; ++i) {
+            string left = to_string(i);
+            string right(left.rbegin(), left.rend());
+            long long nb = stoll(left + right);
+            nb *= nb;
+            if (nb >= start && nb <= end && isPoly(nb))
+                ++ans;
+            else if (nb >= end)
+                break;
+        }
+    }
+    
+    void singleDigPals(long long start, long long end) {
+        for (int i = 1; i < 4; ++i) {
+            int nb = i * i;
+            if (nb >= start && nb <= end)
+                ++ans;
+        }        
+    }
+
+    void oddDigPals(long long start, long long end) {
+        for (char mid = '0'; mid <= '9'; ++mid) {
+            for (int i = 1; i < 10000; ++i) {
+                string left = to_string(i);
+                string right(left.rbegin(), left.rend());
+                long long nb = stoll(left + mid + right);
+                nb *= nb;
+                if (nb >= start && nb <= end && isPoly(nb))
+                    ++ans;
+                else if (nb >= end)
+                    break;
+            }
+        }
+    }
+    
+    
+    int superpalindromesInRange(string left, string right) {
+        long long start = stoll(left), end = stoll(right);
+        singleDigPals(start, end);
+        evenDigPals(start, end);
+        oddDigPals(start, end);
+        return ans;
+    }
+};
