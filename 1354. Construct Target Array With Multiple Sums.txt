@@ -1,0 +1,30 @@
+https://leetcode.com/problems/construct-target-array-with-multiple-sums/
+
+class Solution {
+public:
+    bool isPossible(vector<int>& target) {
+        priority_queue<int> nums;
+        int sum = 0;
+        for (int n : target) {
+            nums.push(n);
+            sum += n;
+        }
+        
+        while (!nums.empty()) {
+            int curr = nums.top();
+            nums.pop();
+            if (curr == 1)
+                continue;
+            sum -= curr;
+            if (curr <= sum || sum <= 0)
+                return false;
+            if (curr % sum == 0)
+                curr = sum;
+            else
+                curr %= sum;
+            sum += curr;
+            nums.push(curr);
+        }
+        return true;
+    }
+};
