@@ -1,0 +1,14 @@
+https://leetcode.com/problems/reducing-dishes/
+
+class Solution {
+public:
+    int maxSatisfaction(vector<int>& satisfaction) {
+        sort(satisfaction.rbegin(), satisfaction.rend());
+        int ans = 0, total = 0;
+        for (int i = 0; i < satisfaction.size() && satisfaction[i] > -total; ++i) {
+            total += satisfaction[i];
+            ans += total;
+        }
+        return ans;
+    }
+};
