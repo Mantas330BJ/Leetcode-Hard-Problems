@@ -1,0 +1,23 @@
+https://leetcode.com/problems/minimum-falling-path-sum-ii/
+
+class Solution {
+public:
+    int minFallingPathSum(vector<vector<int>>& arr) {
+        vector<vector<int>> dp(arr.size(), vector<int>(arr[0].size(), INT_MAX));
+        for (int j = 0; j < arr[0].size(); ++j)
+            dp[0][j] = arr[0][j];
+        for (int i = 1; i < arr.size(); ++i) {
+            for (int j = 0; j < arr[i].size(); ++j) {
+                for (int k = 0; k < j; ++k)
+                    dp[i][j] = min(dp[i][j], dp[i - 1][k]);
+                for (int k = j + 1; k < arr[i].size(); ++k)
+                    dp[i][j] = min(dp[i][j], dp[i - 1][k]);
+                dp[i][j] += arr[i][j];
+            }
+        }
+        int ans = INT_MAX;
+        for (int j = 0; j < arr.back().size(); ++j)
+            ans = min(ans, dp.back()[j]);
+        return ans;
+    }
+};
