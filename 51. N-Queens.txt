@@ -1,0 +1,35 @@
+https://leetcode.com/problems/n-queens/
+
+class Solution {
+public:
+    vector<vector<string>> ans;
+    vector<int> dirsx = {-1, 0, -1, -1};
+    vector<int> dirsy = {0, -1, -1, 1};
+    
+    bool isValid(vector<string>& board, int i, int j) {
+        for (int d = 0; d < dirsx.size(); ++d) {
+            for (int a = i + dirsx[d], b = j + dirsy[d]; a >= 0 && a < board.size() && b >= 0 && b < board[0].size(); a += dirsx[d], b += dirsy[d]) {
+                if (board[a][b] == 'Q')
+                    return false;
+            }
+        }
+        return true;
+    }
+    
+    void bt(vector<string>& board, int i) {
+        if (i == board.size())
+            ans.push_back(board);
+        else for (int j = 0; j < board[i].size(); ++j) {
+            board[i][j] = 'Q';
+            if (isValid(board, i, j))
+                bt(board, i + 1);
+            board[i][j] = '.';
+        }
+    }
+    
+    vector<vector<string>> solveNQueens(int n) {
+        vector<string> board(n, string(n, '.'));
+        bt(board, 0);
+        return ans;
+    }
+};
