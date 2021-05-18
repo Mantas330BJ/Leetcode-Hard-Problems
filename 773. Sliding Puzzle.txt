@@ -1,0 +1,51 @@
+https://leetcode.com/problems/sliding-puzzle/
+
+class Solution {
+public:
+    pair<string, int> toString(vector<vector<int>>& board) {
+        int zeroPlace = -1;
+        string s = "";
+        for (int i = 0; i < board.size(); ++i) {
+            for (int j = 0; j < board[0].size(); ++j) {
+                s += board[i][j] + '0';
+                if (board[i][j] == 0)
+                    zeroPlace = i * 3 + j;
+            }
+        }
+        return {s, zeroPlace};
+    }
+    
+    int slidingPuzzle(vector<vector<int>>& board) {
+        vector<vector<int>> dirs = {{1, 3}, {0, 2, 4}, {1, 5}, {0, 4}, {1, 3, 5}, {2, 4}};
+        unordered_set<string> visited;
+        queue<pair<string, int>> q;
+        
+        pair<string, int> b = toString(board);
+        string toFind = "123450";
+        
+        visited.insert(b.first);
+        q.push(b);
+        int level = 0;
+        while (!q.empty()) {
+            for (int n = q.size(); n > 0; --n) {
+                pair<string, int> curr = q.front();
+                if (curr.first == toFind)
+                    return level;
+                q.pop();
+                int zero = curr.second;
+                vector<int> adj = dirs[zero];
+                for (int i : adj) {
+                    swap(curr.first[zero], curr.first[i]);
+                    if (!visited.count(curr.first)) {
+                        visited.insert(curr.first);
+                        q.push({curr.first, i});
+                    }
+                    swap(curr.first[zero], curr.first[i]);
+
+                }
+            }
+            ++level;
+        }
+        return -1;
+    }
+};
