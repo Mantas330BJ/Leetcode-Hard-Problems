@@ -1,0 +1,25 @@
+https://leetcode.com/problems/minimum-distance-to-type-a-word-using-two-fingers/
+
+class Solution {
+public:
+    int dist(char from, char to) {
+        if (from == 26)
+            return 0;
+        int diffy = abs(from / 6 - to / 6);
+        int diffx = abs(from % 6 - to % 6);
+        return diffx + diffy;
+    }
+    
+    int minimumDistance(string word) {
+        int dp[301][27][27] = {};
+        for (int i = word.size() - 1; i >= 0; --i) {
+            int to = word[i] - 'A';
+            for (int j = 0; j < 27; ++j) {
+                for (int k = 0; k < 27; ++k) {
+                    dp[i][j][k] = min(dp[i + 1][j][to] + dist(k, to), dp[i + 1][to][k] + dist(j, to));
+                }
+            }
+        }
+        return dp[0][26][26];
+    }
+};
