@@ -1,0 +1,24 @@
+https://leetcode.com/problems/palindrome-partitioning-ii/
+
+class Solution {
+public:
+    bool isPalyndrome(string& s, int j, int i) {
+        while (j < i) {
+            if (s[j++] != s[i--])
+                return false;
+        }
+        return true;
+    }
+    
+    int minCut(string s) {
+        vector<int> dp(s.size() + 1, INT_MAX);
+        dp[0] = -1;
+        for (int i = 1; i <= s.size(); ++i) {
+            for (int j = 0; j < i; ++j) {
+                if (isPalyndrome(s, j, i - 1))
+                    dp[i] = min(dp[i], dp[j] + 1);
+            }
+        }
+        return dp.back();
+    }
+};
