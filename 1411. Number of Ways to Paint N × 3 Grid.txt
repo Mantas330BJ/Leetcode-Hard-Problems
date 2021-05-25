@@ -1,0 +1,14 @@
+https://leetcode.com/problems/number-of-ways-to-paint-n-3-grid/
+
+class Solution {
+public:
+    int numOfWays(int n) {
+        int mod = 1e9 + 7;
+        long two[5000] = {6}, three[5000] = {6};
+        for (int i = 1; i < n; ++i) {
+            three[i] = (2 * three[i - 1] + 2 * two[i - 1]) % mod;
+            two[i] = (2 * three[i - 1] + 3 * two[i - 1]) % mod;
+        }
+        return (two[n - 1] + three[n - 1]) % mod;
+    }
+};
