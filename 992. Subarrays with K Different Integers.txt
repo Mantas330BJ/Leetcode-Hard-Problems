@@ -1,0 +1,24 @@
+https://leetcode.com/problems/subarrays-with-k-different-integers/
+
+class Solution {
+public:
+    int atMost(vector<int>& nums, int k) {
+        unordered_map<int, int> distinct;
+        int ans = 0;
+        for (int i = 0, j = 0; i < nums.size(); ++i) {
+            ++distinct[nums[i]];
+            while (distinct.size() > k) {
+                --distinct[nums[j]];
+                if (distinct[nums[j]] == 0)
+                    distinct.erase(nums[j]);
+                ++j;
+            }
+            ans += i - j;
+        }
+        return ans;  
+    }
+    
+    int subarraysWithKDistinct(vector<int>& nums, int k) {
+        return atMost(nums, k) - atMost(nums, k - 1);        
+    }
+};
