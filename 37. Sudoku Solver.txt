@@ -1,0 +1,52 @@
+https://leetcode.com/problems/sudoku-solver/
+
+class Solution {
+public:
+    int rowsTaken[9] = {}, colsTaken[9] = {}, squaresTaken[3][3] = {};
+    
+    bool bt(vector<vector<char>>& board, int i, int j) {
+        
+        if (j == 9) {
+            ++i, j = 0;
+            if (i == 9)
+                return true;
+        }
+        if (board[i][j] == '.') {
+            int taken = rowsTaken[j] | colsTaken[i] | squaresTaken[i / 3][j / 3];
+            
+            for (int d = 0; d < 9; ++d) {
+                if (!(taken & (1 << d))) {
+                    board[i][j] = d + '1';
+                    rowsTaken[j] |= 1 << d;
+                    colsTaken[i] |= 1 << d;
+                    squaresTaken[i / 3][j / 3] |= 1 << d;
+                    
+                    if (bt(board, i, j + 1))
+                        return true;
+                    
+                    board[i][j] = '.';
+                    rowsTaken[j] &= ~(1 << d);
+                    colsTaken[i] &= ~(1 << d);
+                    squaresTaken[i / 3][j / 3] &= ~(1 << d);
+                }
+            }
+            return false;
+        }
+        return bt(board, i, j + 1);
+        
+    }
+    
+    void solveSudoku(vector<vector<char>>& board) {
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                if (board[i][j] != '.') {
+                    int d = board[i][j] - '1';
+                    rowsTaken[j] |= 1 << d;
+                    colsTaken[i] |= 1 << d;
+                    squaresTaken[i / 3][j / 3] |= 1 << d;
+                }
+            }
+        }
+        bt(board, 0, 0);
+    }
+};
