@@ -1,0 +1,12 @@
+https://leetcode.com/problems/chalkboard-xor-game/
+
+class Solution {
+public:
+    bool xorGame(vector<int>& nums) {
+        int n = nums.size(), x = 0;
+        for (int i : nums) {
+            x ^= i;
+        }
+        return x == 0 || n % 2 == 0;
+    }
+};
