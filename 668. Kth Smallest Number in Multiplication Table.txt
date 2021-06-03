@@ -1,0 +1,29 @@
+https://leetcode.com/problems/kth-smallest-number-in-multiplication-table/submissions/
+
+class Solution {
+public:
+    int findKthNumber(int m, int n, int k) {
+        int lo = 1, hi = m * n, mid;
+        while (lo <= hi) {
+            mid = lo + (hi - lo) / 2;
+            
+            bool good = false;
+            int count = 0;
+            for (int i = 1; i <= n; ++i) {
+                count += min(m, mid / i);
+                if (count >= k) {
+                    good = true;
+                    break;
+                }
+            }            
+            
+            if (good)
+                hi = mid - 1;
+            else
+                lo = mid + 1;
+        }
+        return lo;
+    }
+    
+   
+};
