@@ -1,0 +1,28 @@
+https://leetcode.com/problems/minimum-cost-to-hire-k-workers/
+
+class Solution {
+public:
+    double mincostToHireWorkers(vector<int>& quality, vector<int>& wage, int k) {
+        vector<pair<double, int>> workers;
+        for (int i = 0; i < wage.size(); ++i)
+            workers.push_back({(double)wage[i] / quality[i], quality[i]});
+        sort(workers.begin(), workers.end());
+        priority_queue<int> qualities;
+        double ans = DBL_MAX;
+        int curr = 0;
+        
+        for (int i = 0; i  < workers.size(); ++i) {
+            curr += workers[i].second;
+            qualities.push(workers[i].second);
+            if (i >= k) {
+                curr -= qualities.top();
+                qualities.pop();
+            }
+            if (i >= k - 1) {
+                ans = min(ans, workers[i].first * curr);
+            }
+        }
+        return ans;
+        
+    }
+};
