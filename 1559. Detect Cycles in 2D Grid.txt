@@ -1,0 +1,31 @@
+https://leetcode.com/problems/detect-cycles-in-2d-grid/
+
+class Solution {
+public:
+    int dirsx[4] = {0, 0, -1, 1}, dirsy[4] = {-1, 1, 0, 0};
+    bool hasCycle(vector<vector<char>>& grid, vector<vector<int>>& visited, int i, int j, char target, pair<int, int> prev) {
+        if (i < 0 || j < 0 || i >= grid.size() || j >= grid[0].size() || visited[i][j] == 2 || grid[i][j] != target)
+            return false;
+        if (visited[i][j] == 1)
+            return true;
+        visited[i][j] = 1;
+        for (int d = 0; d < 4; ++d) {
+            int tx = i + dirsx[d], ty = j + dirsy[d];
+            if ((tx != prev.first || ty != prev.second) && hasCycle(grid, visited, tx, ty, target, {i, j}))
+                return true;
+        }
+        visited[i][j] = 2;
+        return false;
+    }
+    
+    bool containsCycle(vector<vector<char>>& grid) {
+        vector<vector<int>> visited(grid.size(), vector<int>(grid[0].size()));
+        for (int i = 0; i < grid.size(); ++i) {
+            for (int j = 0; j < grid[0].size(); ++j) {
+                if (!visited[i][j] && hasCycle(grid, visited, i, j, grid[i][j], {-1, -1}))
+                    return true;
+            }
+        }
+        return false;
+    }
+};
