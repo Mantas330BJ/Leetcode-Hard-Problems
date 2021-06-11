@@ -1,0 +1,14 @@
+https://leetcode.com/problems/stone-game-viii/
+
+class Solution {
+public:
+    int stoneGameVIII(vector<int>& stones) {
+        for (int i = 1; i < stones.size(); ++i)
+            stones[i] += stones[i - 1];
+        int dp = stones.back();
+        for (int i = stones.size() - 2; i > 0; --i)
+           dp = max(dp, stones[i] - dp); 
+        return dp;
+        
+    }
+};
