@@ -1,0 +1,59 @@
+https://leetcode.com/problems/palindrome-pairs/
+
+class Solution {
+public:
+    bool isPaly(string& s) {
+        for (int i = 0, j = s.size() - 1; i < j; ++i, --j)
+            if (s[i] != s[j])
+                return false;
+        return true;
+    }
+    
+    vector<vector<int>> palindromePairs(vector<string>& words) {
+        unordered_map<string, int> w;
+        for (int i = 0; i < words.size(); ++i)
+            w[words[i]] = i;
+        
+        unordered_set<int> s;
+        vector<vector<int>> ans;
+        for (int i = 0; i < words.size(); ++i) {
+            if (isPaly(words[i]) && w.count("") && i != w[""]) {
+                int h = i * 5001 + w[""];
+                if (!s.count(h))
+                    ans.push_back({i, w[""]}), s.insert(h);
+                h = w[""] * 5001 + i;
+                if (!s.count(h))
+                    ans.push_back({w[""], i}), s.insert(h);
+
+            }
+            string t = "";
+            for (int j = 0; j < words[i].size(); ++j) {
+                t = words[i][j] + t;
+                if (w.count(t)) {
+                    string p = words[i] + t;
+                    if (isPaly(p) && i != w[t]) {
+                        int h = i * 5001 + w[t];
+                        if (!s.count(h))
+                            ans.push_back({i, w[t]}), s.insert(h);
+                    }
+                }
+            }
+            
+            t = "";
+            for (int j = words[i].size() - 1; j >= 0; --j) {
+                t.push_back(words[i][j]);
+                if (w.count(t)) {
+                    string p = t + words[i];
+                    if (isPaly(p) && i != w[t]) {
+                        int h = w[t] * 5001 + i;
+                        if (!s.count(h))
+                            ans.push_back({w[t], i}), s.insert(h);
+                    }
+                }
+            }
+        }
+      
+        return ans;
+        
+    }
+};
