@@ -1,0 +1,20 @@
+class Solution {
+https://leetcode.com/problems/maximize-score-after-n-operations/
+
+public:
+    int dp[8][1 << 14] = {};
+    int maxScore(vector<int>& n, int i = 1, int mask1 = 0) {
+        if (i * 2 > n.size())
+            return 0;
+        if (!dp[i][mask1]) {
+            for (int j = 1; j < n.size(); ++j) {
+                for (int k = 0; k < j; ++k) {
+                    int mask2 = (1 << j) | (1 << k);
+                    if ((mask1 & mask2) == 0)
+                        dp[i][mask1] = max(dp[i][mask1], i * gcd(n[j], n[k]) + maxScore(n, i + 1, mask1 | mask2));
+                }
+            }
+        }
+        return dp[i][mask1];
+    }
+};
