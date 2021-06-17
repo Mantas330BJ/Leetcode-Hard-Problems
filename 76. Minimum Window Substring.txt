@@ -1,0 +1,25 @@
+https://leetcode.com/problems/minimum-window-substring/
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        int map[128] = {};
+        for (char c: t)
+            ++map[c];
+        pair<int, int> ans = {0, INT_MAX};
+        int counter = t.size(), lo = 0, hi = 0, head = 0;
+        while (hi < s.size()) {
+            if (map[s[hi++]]-- > 0)
+                --counter;
+            while (counter == 0) {
+                if (hi - lo < ans.second) {
+                    ans.first = lo;
+                    ans.second = hi - lo;
+                }
+                if (map[s[lo++]]++ == 0)
+                    ++counter;
+            }  
+        }
+        return ans.second == INT_MAX ? "" : s.substr(ans.first, ans.second);
+    }
+};
