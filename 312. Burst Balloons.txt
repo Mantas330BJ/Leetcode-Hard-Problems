@@ -1,0 +1,24 @@
+https://leetcode.com/problems/burst-balloons/
+
+class Solution {
+public:
+    int maxCoins(vector<int>& nums) {
+        int N = nums.size();
+        nums.insert(nums.begin(), 1);
+        nums.push_back(1);
+        vector<vector<int>> dp(nums.size(), vector<int>(nums.size()));
+
+        for (int l = 1; l <= N; ++l) {
+            for (int i = 1; i + l - 1 <= N; ++i) {
+                int j = i + l - 1;
+                int bestCoins = 0;
+                for (int f = i; f <= j; ++f) {
+                    int coins = dp[i][f - 1] + dp[f + 1][j] + nums[i - 1] * nums[f] * nums[j + 1];
+                    bestCoins = max(bestCoins, coins);
+                }
+                dp[i][j] = bestCoins;
+            }
+        }
+        return dp[1][N];
+    }
+};
