@@ -1,0 +1,43 @@
+https://leetcode.com/problems/redundant-connection-ii/
+
+class Solution {
+public:
+    vector<int> findRedundantDirectedConnection(vector<vector<int>>& edges) {
+        
+        vector<int> pCounts(edges.size() + 1, -1);
+        
+        vector<int> cand1, cand2;
+        for (int i = 0; i < edges.size(); ++i) {
+            vector<int> v = edges[i];
+            if (pCounts[v[1]] != -1)
+                cand1 = edges[pCounts[v[1]]], cand2 = v;
+            pCounts[v[1]] = i;
+        }
+        
+        vector<int> p(edges.size() + 1);
+        vector<int> ans;
+        for (int i = 1; i <= edges.size(); ++i)
+            p[i] = i;
+        
+        vector<int> invalid;
+        for (auto& v : edges) {
+            if (!cand2.empty() && v[0] == cand2[0] && v[1] == cand2[1])
+                continue;
+            int n1 = v[0], n2 = v[1];
+            while (n1 != p[n1])
+                n1 = p[n1];
+            while (n2 != p[n2])
+                n2 = p[n2];
+            if (n1 == n2)
+                invalid = v;
+            else
+                p[n2] = n1;  
+        }
+        if (invalid.empty())
+            return cand2;
+        else if (cand2.empty())
+            return invalid;
+        else
+            return cand1;
+    }
+};
