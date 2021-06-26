@@ -1,0 +1,35 @@
+https://leetcode.com/problems/count-of-smaller-numbers-after-self/
+
+class Solution {
+public:
+    vector<int> smaller;
+    
+    vector<int> sort(vector<int> indices, vector<int>& nums) {
+        int mid = indices.size() / 2;
+        if (mid) {
+            vector<int> left = sort(vector<int>(indices.begin(), indices.begin() + mid), nums);
+            vector<int> right = sort(vector<int>(indices.begin() + mid, indices.end()), nums);
+            for (int i = indices.size() - 1; i >= 0; --i) {
+                if (right.empty() || !left.empty() && nums[left.back()] > nums[right.back()]) {
+                    smaller[left.back()] += right.size();
+                    indices[i] = left.back();
+                    left.pop_back();
+                }
+                else {
+                    indices[i] = right.back();
+                    right.pop_back();
+                }
+            }
+        }
+        return indices;    
+    }
+    
+    vector<int> countSmaller(vector<int>& nums) {
+        smaller.resize(nums.size());
+        vector<int> indices(nums.size());
+        for (int i = 0; i < nums.size(); ++i)
+            indices[i] = i;
+        sort(indices, nums);
+        return smaller;
+    }
+};
