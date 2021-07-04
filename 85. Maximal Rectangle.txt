@@ -1,0 +1,47 @@
+https://leetcode.com/problems/maximal-rectangle/
+
+class Solution {
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        if (matrix.empty() || matrix[0].empty())
+            return 0;
+        for (int j = 0; j < matrix[0].size(); ++j)
+            matrix.back()[j] -= '0';
+        
+        for (int i = matrix.size() - 2; i >= 0; --i) {
+            for (int j = 0; j < matrix[0].size(); ++j) {
+                matrix[i][j] -= '0';
+                if (matrix[i][j])
+                    matrix[i][j] += matrix[i + 1][j];
+            }
+        }
+        
+        int ans = 0;
+        for (int i = 0; i < matrix.size(); ++i) {
+            vector<int> heights;
+            for (int j = 0; j < matrix[0].size(); ++j)
+                heights.push_back(matrix[i][j]);
+            ans = max(ans, largestRectangleArea(heights));
+        }
+        return ans;
+        
+    }
+    
+    
+    int largestRectangleArea(vector<int>& heights) {
+        heights.push_back(0);
+        stack<int> idx;
+        
+        int ans = 0;
+        for (int i = 0; i < heights.size(); ++i) {
+            while (!idx.empty() && heights[idx.top()] >= heights[i]) {
+                int h = heights[idx.top()];
+                idx.pop();
+                int x = idx.empty() ? -1 : idx.top();
+                ans = max(ans, h * (i - x - 1));
+            }
+            idx.push(i);
+        }
+        return ans;
+    }
+};
