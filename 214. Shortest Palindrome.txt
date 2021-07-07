@@ -1,0 +1,32 @@
+https://leetcode.com/problems/shortest-palindrome/
+
+class Solution {
+public:
+    string shortestPalindrome(string s) {
+        if (s.size() <= 1)
+            return s;
+        int pivot = (s.size() - 1) / 2;
+        bool finished = false, odd = true;
+        
+        while (!finished && pivot > 0) {
+            finished = false;
+            int i, j;
+            for (int k = 0; k <= 1; ++k) {
+                for (i = pivot - 1, j = pivot + k; i >= 0 && s[i] == s[j]; --i, ++j)
+                    ;
+                if (i < 0) {
+                    odd = k;
+                    finished = true;
+                }
+            }
+            if (!finished)
+                --pivot;
+        }
+
+        string pali = s.substr(pivot + odd);
+        string rev = string(pali.rbegin(), pali.rend());
+        if (odd)
+            return rev + s[pivot] + pali;
+        return rev + pali;        
+    }
+};
