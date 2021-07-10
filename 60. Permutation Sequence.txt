@@ -1,0 +1,35 @@
+https://leetcode.com/problems/permutation-sequence/
+
+class Solution {
+public:
+	
+    void setPerm(vector<int>& v, string& ans, int n, int k, vector<int>& factVal){
+	    if (n == 1) {
+            ans += to_string(v.back());
+            return;
+        }
+		
+	int index = (k / factVal[n - 1]) - (k % factVal[n - 1] == 0);
+	ans += to_string(v[index]);
+        v.erase(v.begin() + index);
+        k -= factVal[n - 1] * index;
+        setPerm(v, ans, n-1, k, factVal);
+    }
+    
+    string getPermutation(int n, int k) {
+        if (n == 1)
+            return "1";
+        vector<int>factVal(n + 1);
+        factVal[0] = 1;
+        for (int i = 1; i <= n; ++i)
+            factVal[i] = factVal[i - 1] * i;
+        string ans = "";
+        
+        vector<int> v(n);
+        for(int i = 0; i < n; ++i)
+            v[i] = i + 1;
+        
+        setPerm(v, ans, n, k,factVal);
+        return ans;
+    }
+};
