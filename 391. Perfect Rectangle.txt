@@ -1,0 +1,36 @@
+https://leetcode.com/problems/perfect-rectangle/
+
+class Solution {
+public:
+    bool isRectangleCover(vector<vector<int>>& rectangles) {
+        int area = 0, maxX = INT_MIN, maxY = INT_MIN, minX = INT_MAX, minY = INT_MAX;
+        unordered_set<string> points;
+        for (auto& i : rectangles) {
+            int x1 = i[0], y1 = i[1], x2 = i[2], y2 = i[3];
+            area += (x2 - x1) * (y2 - y1);
+            
+            for (int x : {x1, x2}) {
+                for (int y : {y1, y2}) {
+                    string s = to_string(x) + " " + to_string(y);
+                    if (!points.count(s))
+                        points.insert(s);
+                    else
+                        points.erase(s);
+                }
+            }   
+            
+            minX = min(minX, x1);
+            minY = min(minY, y1);
+            maxX = max(maxX, x2);
+            maxY = max(maxY, y2);
+        }
+        for (int x : {minX, maxX}) {
+            for (int y : {minY, maxY}) {
+                if (!points.count(to_string(x) + " " + to_string(y)))
+                    return false;
+            }
+        }
+        
+        return points.size() == 4 && area == (maxX - minX) * (maxY - minY);
+    }
+};
