@@ -1,0 +1,61 @@
+https://leetcode.com/problems/largest-multiple-of-three/
+
+class Solution {
+public:
+    string buildString(int counts[10]) {
+        string str = "";
+        for (int i = 9; i >= 0; --i) {
+            for (int j = 0; j < counts[i]; ++j) {
+                str += i + '0';
+            }
+        }
+        if (!str.empty() && str[0] == '0')
+            return "0";
+        return str;
+    }
+    
+    string largestMultipleOfThree(vector<int>& digits) {
+        int counts[10] = {};
+        int sum = 0;
+        for (int i : digits) {
+            ++counts[i];
+            sum = (sum + i) % 3;
+        }
+        if (sum == 0) {
+            return buildString(counts);
+        }
+        vector<int> counts1 = {1, 4, 7}, counts2 = {2, 5, 8};
+       
+        if (sum == 1) {
+            for (int i : counts1) {
+                if (counts[i]) {
+                    --counts[i];
+                    return buildString(counts);
+                }
+            }
+        }
+        if (sum == 2) {
+            for (int i : counts2) {
+                if (counts[i]) {
+                    --counts[i];
+                    return buildString(counts);
+                }
+            }
+            for (int i : counts1) {
+                if (counts[i] >= 2) {
+                    counts[i] -= 2;
+                    return buildString(counts);
+                }
+            }
+        }
+        if (sum == 1) {
+            for (int i : counts2) {
+                if (counts[i] >= 2) {
+                    counts[i] -= 2;
+                    return buildString(counts);
+                }
+            }
+        }
+        return "";
+    }
+};
