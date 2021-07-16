@@ -1,0 +1,16 @@
+https://leetcode.com/problems/number-of-ways-to-stay-in-the-same-place-after-some-steps/
+
+class Solution {
+public:
+    int numWays(int steps, int arrLen) {
+        int mod = 1e9 + 7, range = min(steps, arrLen);
+        vector<vector<int>> dp(steps + 1, vector<int>(range + 2));
+        dp[0][1] = 1;
+        for (int i = 1; i <= steps; ++i) {
+            for (int j = 1; j <= range; ++j) {
+                dp[i][j] = ((dp[i - 1][j] + dp[i - 1][j - 1]) % mod + dp[i - 1][j + 1]) % mod;
+            }
+        }
+        return dp[steps][1];
+    }
+};
