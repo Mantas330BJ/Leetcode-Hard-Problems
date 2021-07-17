@@ -1,0 +1,57 @@
+https://leetcode.com/problems/three-equal-parts/
+
+class Solution {
+public:
+    bool checkIfSame(int& j, vector<int>& right, vector<int>& arr) {
+        while (j < arr.size() && arr[j] == 0)
+            ++j;
+        int k;
+        for (k = 0; k < right.size() && j < arr.size(); ++k, ++j) {
+            if (arr[j] != right[k])
+                return false;
+        }
+        if (k != right.size())
+            return false;
+        return true;
+    }
+    
+    int getEnding(vector<int>& arr, vector<int>& right, int oneCount) {
+        int i = arr.size() - 1, j, endingZeroes = 0;
+        while (i >= 0 && arr[i] == 0) {
+            ++endingZeroes;
+            right.push_back(arr[i--]);
+        }
+        for (j = 0; j < oneCount; j += arr[i--]) {
+            right.push_back(arr[i]);
+        }
+        while (i >= 0 && arr[i] == 0)
+            --i;
+        reverse(right.begin(), right.end());
+        return i + 1 + endingZeroes;
+    }
+    
+    vector<int> threeEqualParts(vector<int>& arr) {
+        int oneCount = 0;
+        for (int i : arr)
+            oneCount += i;
+        if (oneCount % 3)
+            return {-1, -1};
+        oneCount /= 3;
+        if (oneCount == 0)
+            return {0, (int)arr.size() - 1};
+        
+        vector<int> right;
+        int ansRight = getEnding(arr, right, oneCount);
+        
+        int j = 0;
+        if (!checkIfSame(j, right, arr))
+            return {-1, -1};
+        
+        int ansLeft = j - 1;
+        if (!checkIfSame(j, right, arr))
+            return {-1, -1};
+        
+        return {ansLeft, ansRight};
+        
+    }
+};
