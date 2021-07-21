@@ -1,0 +1,19 @@
+https://leetcode.com/problems/maximum-equal-frequency/
+
+class Solution {
+public:
+    int maxEqualFreq(vector<int>& nums) {
+        unordered_map<int, int> counts;
+        multiset<int> countMap;
+        int maxLength = 0;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (counts.count(nums[i]))
+                countMap.erase(countMap.find(counts[nums[i]]));
+            countMap.insert(++counts[nums[i]]);
+            if (countMap.size() == 1 || *countMap.begin() * countMap.size() == i && *prev(countMap.end()) == *countMap.begin() + 1 ||
+                (*countMap.begin() == 1 && *next(countMap.begin()) * (countMap.size() - 1) == i && *prev(countMap.end()) == *next(countMap.begin())))
+                maxLength = i + 1;
+        }
+        return maxLength;
+    }
+};
