@@ -1,0 +1,65 @@
+https://leetcode.com/problems/making-a-large-island/
+
+class Solution {
+public:
+    int dirsx[4] = {-1, 1, 0, 0};
+    int dirsy[4] = {0, 0, -1, 1};
+    
+    int dfs(vector<vector<int>>& grid, int i, int j, stack<pair<int, int>>& currIsland) {
+        if (i < 0 || j < 0 || i >= grid.size() || j >= grid[0].size() || grid[i][j] != 1)
+            return 0;
+        grid[i][j] = 0;
+        currIsland.push({i, j});
+        int islandSize = 1;
+        for (int d = 0; d < 4; ++d)
+            islandSize += dfs(grid, i + dirsx[d], j + dirsy[d], currIsland);
+        return islandSize;
+    }
+    
+    void fillGrid(vector<vector<int>>& grid, vector<vector<int>>& groups, int& maxIsland) {
+        int groupId = 0;
+        for (int i = 0; i < grid.size(); ++i) {
+            for (int j = 0; j < grid[0].size(); ++j) {
+                if (grid[i][j] == 1) {
+                    stack<pair<int, int>> currIsland;
+                    int islandSize = dfs(grid, i, j, currIsland);
+                    maxIsland = max(maxIsland, islandSize);
+                    while (!currIsland.empty()) {
+                        int x = currIsland.top().first, y = currIsland.top().second;
+                        grid[x][y] = islandSize;
+                        groups[x][y] = groupId;
+                        currIsland.pop();
+                    }
+                }
+                ++groupId;
+            }
+        }
+    }
+    
+    int largestIsland(vector<vector<int>>& grid) {
+        int maxIsland = 0;
+        
+        vector<vector<int>> groups(grid.size(), vector<int>(grid[0].size()));
+        fillGrid(grid, groups, maxIsland);
+        
+        for (int i = 0; i < grid.size(); ++i) {
+            for (int j = 0; j < grid[0].size(); ++j) {
+                if (grid[i][j] == 0) {
+                    int count = 1;
+                    unordered_set<int> diffGroups;
+                    
+                    for (int d = 0; d < 4; ++d) {
+                        int ti = i + dirsx[d], tj = j + dirsy[d];
+                        if (ti >= 0 && ti < grid.size() && tj >= 0 && tj < grid[0].size() && grid[ti][tj] != 0 && !diffGroups.count(groups[ti][tj])) {
+                            diffGroups.insert(groups[ti][tj]);
+                            count += grid[ti][tj];
+                        }
+                    }
+                    maxIsland = max(maxIsland, count);
+                }
+            }
+        }
+        
+        return maxIsland;
+    }
+};
