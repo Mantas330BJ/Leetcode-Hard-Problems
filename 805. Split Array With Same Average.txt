@@ -1,0 +1,29 @@
+https://leetcode.com/problems/split-array-with-same-average/
+
+class Solution {
+public:
+    bool splitArraySameAverage(vector<int>& nums) {
+        int n = nums.size(), totalSum = accumulate(nums.begin(), nums.end(), 0);
+        bool isPossible = false;
+        for (int i = 1; i <= n / 2; ++i) {
+            if (totalSum * i % n == 0) {
+                isPossible = true;
+                break;
+            }
+        }
+        if (!isPossible)
+            return false;
+        
+        vector<unordered_set<int>> sums(n / 2 + 1);
+        sums[0].insert(0);
+        for (int num : nums) {
+            for (int i = n / 2; i > 0; --i) 
+                for (int t : sums[i - 1]) 
+                    sums[i].insert(t + num);
+        }
+        for (int i = 1; i <= n / 2; ++i) 
+            if (totalSum * i % n == 0 && sums[i].count(totalSum * i / n))
+                return true;
+        return false;
+    }
+};
