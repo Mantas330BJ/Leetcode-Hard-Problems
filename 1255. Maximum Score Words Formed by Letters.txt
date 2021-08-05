@@ -1,0 +1,44 @@
+https://leetcode.com/problems/maximum-score-words-formed-by-letters/
+
+class Solution {
+public:
+    void bt(vector<vector<int>>& wordLetters, int counts[], int& maxScore, int scr, int i, vector<int>& score) {
+        for (int j = 0; j < 26; ++j) {
+            if (counts[j] < 0)
+                return;
+        }
+        maxScore = max(maxScore, scr);
+       
+        if (i < wordLetters.size()) {
+            int prevScr = scr;
+            for (int j = 0; j < 26; ++j) {
+                counts[j] -= wordLetters[i][j];
+                scr += score[j] * wordLetters[i][j];
+            }
+            bt(wordLetters, counts, maxScore, scr, i + 1, score);
+            for (int j = 0; j < 26; ++j) {
+                counts[j] += wordLetters[i][j];
+            }
+            bt(wordLetters, counts, maxScore, prevScr, i + 1, score);
+
+        }
+    }
+    
+    
+    
+    int maxScoreWords(vector<string>& words, vector<char>& letters, vector<int>& score) {
+        int counts[26] = {};
+        for (char c : letters)
+            ++counts[c - 'a'];
+        vector<vector<int>> wordLetters(words.size(), vector<int>(26));
+        for (int i = 0; i < words.size(); ++i) {
+            for (char c : words[i]) {
+                ++wordLetters[i][c - 'a'];
+            }
+        }
+        
+        int maxScore = INT_MIN;
+        bt(wordLetters, counts, maxScore, 0, 0, score);
+        return maxScore;
+    }
+};
