@@ -1,0 +1,43 @@
+https://leetcode.com/problems/palindrome-partitioning-iii/
+
+class Solution {
+public:
+    int minPaliSteps(string& t) {
+        int steps = 0;
+        for (int i = 0, j = t.size() - 1; i < j; ++i, --j) {
+            steps += t[i] != t[j];
+        }
+        return steps;
+    }
+    
+    
+    int palindromePartition(string s, int k) {
+        unordered_map<string, int> change;
+        for (int i = 0; i < s.size(); ++i) {
+            string t = "";
+            for (int j = i; j < s.size(); ++j) {
+                t += s[j];
+                if (!change.count(t))
+                    change[t] = minPaliSteps(t);
+            }
+        }
+        
+        vector<vector<int>>dp(s.size(), vector<int>(k, 1e5));
+        
+        string t = "";
+        for (int i = 0; i < s.size(); ++i) {
+            t += s[i];
+            dp[i][0] = change[t];
+        }
+        
+        for (int j = 1; j < s.size(); ++j) {
+            for (int i = 0; i < j; ++i) {
+                string t = s.substr(i + 1, j - i);
+                for (int a = 1; a < min(k, j + 1); ++a) {
+                    dp[j][a] = min(dp[i][a - 1] + change[t], dp[j][a]);
+                }
+            }
+        }
+        return dp.back().back();
+    }
+};
