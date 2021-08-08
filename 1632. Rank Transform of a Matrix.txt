@@ -1,0 +1,49 @@
+https://leetcode.com/problems/rank-transform-of-a-matrix/
+
+class Solution {
+public:
+    vector<vector<int>> matrixRankTransform(vector<vector<int>>& matrix) {
+        int m = matrix.size(), n = matrix[0].size();
+        map<int, vector<int>> mp;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                mp[matrix[i][j]].push_back(i * n + j);
+            }
+        }
+        
+        vector<int> rank(m + n);
+        vector<vector<int>> res(m, vector<int>(n));
+        
+        for (auto& it: mp) {
+            vector<int> root(m + n);
+            for (int i = 0; i < root.size(); ++i)
+                root[i] = i;
+            
+            auto& v = it.second;
+            for (auto& a: v) {
+                int i = a / n, j = a % n;
+                int r1 = find(root, i), r2 = find(root, j + m);
+                root[r1] = r2;
+                rank[r2] = max(rank[r1], rank[r2]); 
+            }
+            
+            auto rank2 = rank;
+            for (auto& a: v) {
+                int i = a / n, j = a % n;
+                int r = find(root, i);
+                rank2[i] = rank[r] + 1;
+                rank2[j + m] = rank2[i];
+                res[i][j] = rank2[i];
+            }
+            rank = vector<int>(rank2);
+        }
+        return res;
+    }
+    
+    int find(vector<int>& root, int x) {
+        while (root[x] != x) {
+            x = root[x];
+        }
+        return x;
+    }
+};
