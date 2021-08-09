@@ -1,0 +1,38 @@
+https://leetcode.com/problems/sum-of-distances-in-tree/
+
+class Solution {
+public:
+
+    vector<int> sumOfDistancesInTree(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> tree(n);
+        vector<int> sums(n);
+        vector<int> count(n, 1);
+
+        for (auto& e : edges) {
+            tree[e[0]].push_back(e[1]);
+            tree[e[1]].push_back(e[0]);
+        }
+        dfs(0, -1, tree, sums, count);
+        dfs2(0, -1, tree, sums, count);
+        return sums;
+    }
+
+    void dfs(int root, int pre, vector<vector<int>>& tree, vector<int>& sums, vector<int>& count) {
+        for (int i : tree[root]) {
+            if (i != pre) {
+                dfs(i, root, tree, sums, count);
+                count[root] += count[i];
+                sums[root] += sums[i] + count[i];
+            }
+        }
+    }
+
+    void dfs2(int root, int pre, vector<vector<int>>& tree, vector<int>& sums, vector<int>& count) {
+        for (int i : tree[root]) {
+            if (i != pre) {
+                sums[i] = sums[root] - count[i] + count.size() - count[i];
+                dfs2(i, root, tree, sums, count); 
+            }
+        }
+    }
+};
