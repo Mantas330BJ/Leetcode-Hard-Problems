@@ -1,0 +1,17 @@
+https://leetcode.com/problems/count-number-of-special-subsequences/
+
+class Solution {
+public:
+    int countSpecialSubsequences(vector<int>& nums) {
+        int mod = 1e9 + 7, dp[3] = {};
+        for (int i : nums) {
+            if (i == 0)
+                dp[0] = (dp[0] + dp[0] + 1) % mod;
+            else if (i == 1) 
+                dp[1] = (long(dp[1]) * 2 + dp[0]) % mod;    
+            else
+                dp[2] = (long(dp[2]) * 2 + dp[1]) % mod;
+        }
+        return dp[2];
+    }
+};
