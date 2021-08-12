@@ -1,0 +1,34 @@
+https://leetcode.com/problems/split-array-largest-sum/
+
+class Solution {
+public:
+    int splitArray(vector<int>& nums, int m) {
+        int lo = INT_MIN, hi = 0, mid;
+        for (int i : nums) {
+            lo = max(lo, i);
+            hi += i;
+        }
+        
+        while (lo <= hi) {
+            mid = lo + (hi - lo) / 2;
+            bool good = true;
+            
+            for (int i = 0, sum = 0, count = 0; i < nums.size(); ++i) {
+                sum += nums[i];
+                if (sum > mid) {
+                    if (++count >= m) {
+                        good = false;
+                        break;
+                    };
+                    sum = nums[i];
+                }
+            }
+            
+            if (good)
+                hi = mid - 1;
+            else
+                lo = mid + 1;
+        }
+        return lo;
+    }
+};
