@@ -1,0 +1,18 @@
+https://leetcode.com/problems/super-washing-machines/
+
+class Solution {
+public:
+    int findMinMoves(vector<int>& machines) {
+        int sum = 0; 
+        for (int i : machines)
+            sum += i;
+        if (sum % machines.size() != 0)
+            return -1;
+        int avg = sum / machines.size(), cnt = 0, mx = 0;
+        for (int load : machines){
+            cnt += load - avg;
+            mx = max({mx, abs(cnt), load - avg});
+        }
+        return mx;
+    }
+};
