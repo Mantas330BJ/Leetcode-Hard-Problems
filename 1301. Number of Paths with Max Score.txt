@@ -1,0 +1,44 @@
+https://leetcode.com/problems/number-of-paths-with-max-score/
+
+class Solution {
+public:
+    vector<int> pathsWithMaxScore(vector<string>& board) {
+        int n = board.size(), mod = 1e9 + 7;
+        vector<vector<int>> vals(n, vector<int>(n)), counts(n, vector<int>(n));
+        counts[n - 1][n - 1] = 1;
+        
+        int dirsx[] = {0, 1, 1};
+        int dirsy[] = {1, 0, 1};
+
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = n - 1; j >= 0; --j) {
+                if (i == n - 1 && j == n - 1)
+                    continue;
+                if (board[i][j] == 'X')
+                    continue;
+                
+                int maxVal = INT_MIN;
+                for (int k = 0; k < 3; ++k) {
+                    int tx = i + dirsx[k], ty = j + dirsy[k];
+                    if (tx < n && ty < n && board[tx][ty] != 'X') {
+                        maxVal = max(maxVal, vals[tx][ty]);
+                    }
+                }
+                
+                for (int k = 0; k < 3; ++k) {
+                    int tx = i + dirsx[k], ty = j + dirsy[k];
+                    if (tx < n && ty < n && board[tx][ty] != 'X') {
+                        if (vals[tx][ty] == maxVal) {
+                            counts[i][j] = (counts[i][j] + counts[tx][ty]) % mod;
+                        }
+                    }
+                }
+                vals[i][j] = maxVal + (isdigit(board[i][j]) ? board[i][j] - '0' : 0);
+            }
+        }
+        if (vals[0][0] < 0)
+            return {0, 0};
+        return {vals[0][0], counts[0][0]};
+
+    }
+};
