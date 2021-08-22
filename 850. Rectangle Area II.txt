@@ -1,0 +1,42 @@
+https://leetcode.com/problems/rectangle-area-ii/
+
+class Solution {
+public:
+    int rectangleArea(vector<vector<int>>& rectangles) {
+        int mod = 1e9 + 7;
+        set<int> sx, sy;
+        for (auto& v : rectangles) {
+            sx.insert(v[0]);
+            sy.insert(v[1]);
+            sx.insert(v[2]);
+            sy.insert(v[3]);    
+        }
+        
+        vector<int> x(sx.begin(), sx.end()), y(sy.begin(), sy.end());
+        
+        unordered_map<int, int> mapx, mapy;
+        for (int i = 0; i < x.size(); ++i) {
+            mapx[x[i]] = i;
+        }
+        for (int i = 0; i < y.size(); ++i) {
+            mapy[y[i]] = i;
+        }
+        
+        vector<vector<bool>> visited(x.size(), vector<bool>(y.size()));
+
+        int ans = 0;
+        for (auto& v : rectangles) {
+            int startx = v[0], starty = v[1], endx = v[2], endy = v[3];
+            for (int i = mapx[startx]; i < mapx[endx]; ++i) {
+                for (int j = mapy[starty]; j < mapy[endy]; ++j) {
+                    if (!visited[i][j]) {
+                        visited[i][j] = true;
+                        ans = (ans + (long)(x[i + 1] - x[i]) * (y[j + 1] - y[j])) % mod;
+                    }
+                }
+            }
+        }
+      
+        return ans;
+    }
+};
