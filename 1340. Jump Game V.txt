@@ -1,0 +1,39 @@
+https://leetcode.com/problems/jump-game-v/
+
+class Solution {
+public:
+    vector<vector<int>> maxes;
+    vector<int> dp;
+    
+    int dfs(vector<int>& arr, int i, int d) {
+        if (dp[i])
+            return dp[i];
+        int val = 1, maxVal = 0;
+        for (int j = 1; j <= d; ++j) {
+            if (i + j < arr.size() && maxes[i + 1][i + j] < arr[i])
+                maxVal = max(maxVal, dfs(arr, i + j, d));
+            if (i - j >= 0 && maxes[i - j][i - 1] < arr[i])
+                maxVal = max(maxVal, dfs(arr, i - j, d));
+        }
+        dp[i] = val + maxVal;
+        return val + maxVal;
+    }
+    
+    int maxJumps(vector<int>& arr, int d) {
+        maxes = vector<vector<int>>(arr.size(), vector<int>(arr.size()));
+        dp = vector<int>(arr.size());
+        for (int i = 0; i < arr.size(); ++i) {
+            int maxNb = INT_MIN;
+            for (int j = i; j < arr.size(); ++j) {
+                maxNb = max(maxNb, arr[j]);
+                maxes[i][j] = maxNb;
+            }
+        }
+        
+        int ans = 0;
+        for (int i = 0; i < arr.size(); ++i) {
+            ans = max(ans, dfs(arr, i, d));
+        }
+        return ans;
+    }
+};
