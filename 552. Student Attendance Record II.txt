@@ -1,0 +1,21 @@
+https://leetcode.com/problems/student-attendance-record-ii/
+
+class Solution {
+public:
+    int checkRecord(int n) {
+        if (n == 1)
+            return 3;
+        int mod = 1e9 + 7;
+        vector<long> nums = {1, 1, 2};
+        nums.resize(n + 1);
+        for (int i = 3; i <= n; ++i) {
+            nums[i] = (nums[i - 1] + nums[i - 2] + nums[i - 3]) % mod;
+        }
+        int ans = (nums[n] + nums[n - 1] + nums[n - 2]) % mod;
+        for (int i = 0; i < n; ++i) {
+            ans += nums[i + 1] * nums[n - i] % mod;
+            ans %= mod;
+        }
+        return ans;
+    }
+};
