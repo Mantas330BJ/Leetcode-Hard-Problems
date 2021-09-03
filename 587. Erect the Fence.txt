@@ -1,0 +1,65 @@
+https://leetcode.com/problems/erect-the-fence/
+
+class Solution {
+public:
+    vector<vector<int>> outerTrees(vector<vector<int>>& trees) {
+        set<int> uniques;
+        vector<vector<int>> ans;
+        
+        vector<int> first = trees[0];
+        int firstIdx = 0;
+        for (int i = 1; i < trees.size(); ++i) {
+            if (trees[i][0] < first[0]) {
+                first = trees[i];
+                firstIdx = i;
+            }
+        }
+        ans.push_back(first);
+        uniques.insert(first[0] * 101 + first[1]);
+        
+        vector<int> cur = first;
+        int curIdx = firstIdx;
+        do {
+            vector<int> next = trees[0];
+            int nextIdx = 0;
+            for (int i = 1; i < trees.size(); ++i) {
+                if (i == curIdx)
+                    continue;
+                int cross = crossProduct(cur, trees[i], next);
+                if (nextIdx == curIdx || cross > 0 || (cross == 0 && distance(trees[i], cur) > distance(next, cur))) {
+                    next = trees[i];
+                    nextIdx = i;
+                }
+            }
+            
+            for (int i = 0; i < trees.size(); ++i) {
+                if (i == curIdx)
+                    continue;
+                int cross = crossProduct(cur, trees[i], next), hash = trees[i][0] * 101 + trees[i][1];
+                if (cross == 0 && !uniques.count(hash)) {
+                    ans.push_back(trees[i]);
+                    uniques.insert(hash);
+                }
+            }
+            
+            cur = next;
+            curIdx = nextIdx;
+        } while (curIdx != firstIdx);
+        
+        return ans;
+    }
+    
+    int crossProduct(vector<int>& a, vector<int>& b, vector<int>& c) {
+        int bax = a[0] - b[0];
+        int bay = a[1] - b[1];
+        int bcx = c[0] - b[0];
+        int bcy = c[1] - b[1];
+        return bax * bcy - bay * bcx;
+    }
+    
+    int distance(vector<int>& a, vector<int>& b) {
+        return (a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]);
+    }
+};
+
+
