@@ -1,0 +1,45 @@
+https://leetcode.com/problems/integer-to-english-words/
+
+class Solution {
+public:
+    string buildStr(vector<string>& words) {
+        string s = "";
+        for (string& w : vector(words.rbegin(), words.rend())) {
+            if (!w.empty()) {
+                s += w + " ";
+            }
+        }
+        return s.substr(0, s.size() - 1);
+    }
+    
+    string numberToWords(int num) {
+        vector<string> lessThanTwenty = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen",
+                                        "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+        vector<string> tens = {"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+        vector<string> thousands = {"", "Thousand", "Million", "Billion"};
+        vector<string> words;
+        if (num == 0)
+            return "Zero";
+        
+        for (int i = 0; num > 0; ++i, num /= 1000) {
+            int rem = num % 1000;
+            if (rem) {
+                words.push_back(thousands[i]);
+                vector<string> twords;
+                if (rem >= 100) {
+                    twords.push_back(lessThanTwenty[rem / 100]);
+                    twords.push_back("Hundred");
+                    rem %= 100;
+                }
+                if (rem >= 20) {
+                    twords.push_back(tens[rem / 10]);
+                    rem %= 10;
+                }
+                words.push_back(lessThanTwenty[rem]);
+                for (string& s : vector(twords.rbegin(), twords.rend()))
+                    words.push_back(s);
+            }
+        }
+        return buildStr(words);
+    }
+};
