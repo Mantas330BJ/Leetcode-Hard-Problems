@@ -1,0 +1,25 @@
+https://leetcode.com/problems/arithmetic-slices-ii-subsequence/
+
+class Solution {
+public:
+    int numberOfArithmeticSlices(vector<int>& nums) {
+        int n = nums.size();
+        vector<unordered_map<int, int>> diffs(n);
+        
+        int ans = -n * (n - 1) / 2;
+        
+        for (int i = 1; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                long diff = (long)nums[i] - nums[j];
+                if (diff > INT_MIN && diff < INT_MAX)
+                    diffs[i][diff] += diffs[j][diff] + 1;
+                else
+                    ++ans;
+            }
+            for (auto diff : diffs[i])
+                ans += diff.second;
+        }
+        return ans;
+        
+    }
+};
