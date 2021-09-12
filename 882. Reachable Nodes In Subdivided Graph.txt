@@ -1,0 +1,31 @@
+https://leetcode.com/problems/reachable-nodes-in-subdivided-graph/
+
+class Solution {
+public:
+   int reachableNodes(vector<vector<int>> edges, int maxMoves, int n) {
+        unordered_map<int, unordered_map<int, int>> e;
+        for (auto& v : edges) {
+            e[v[0]][v[1]] = v[2];
+            e[v[1]][v[0]] = v[2];
+        }
+        priority_queue<pair<int, int>> pq;
+        pq.push({maxMoves, 0});
+        unordered_map<int, int> seen;
+        while (!pq.empty()) {
+            int moves = pq.top().first, i = pq.top().second;
+            pq.pop();
+            if (!seen.count(i)) {
+                seen[i] = moves;
+                for (auto& j : e[i]) {
+                    int nextMoves = moves - j.second - 1;
+                    if (nextMoves >= 0 && !seen.count(j.first))
+                        pq.push({nextMoves, j.first});
+                }
+            }
+        }
+        int ans = seen.size();
+        for (auto& v : edges)
+            ans += min(seen[v[0]] + seen[v[1]], v[2]);
+        return ans;
+    }
+};
